@@ -243,21 +243,7 @@ const PaintEditorComponent = props => (
                             <span className={styles.buttonText}>
                                 {props.intl.formatMessage(messages.bitmap)}
                             </span>
-                        </Button> :
-                        isBitmap(props.format) ?
-                            <Button
-                                className={styles.bitmapButton}
-                                onClick={props.onSwitchToVector}
-                            >
-                                <img
-                                    className={styles.bitmapButtonIcon}
-                                    draggable={false}
-                                    src={bitmapIcon}
-                                />
-                                <span className={styles.buttonText}>
-                                    {props.intl.formatMessage(messages.vector)}
-                                </span>
-                            </Button> : null
+                        </Button> : null
                     }
                     {/* Zoom controls */}
                     <InputGroup className={styles.zoomControls}>
