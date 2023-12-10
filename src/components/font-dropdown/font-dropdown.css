@@ -16,7 +16,7 @@
 }
 
 .mod-menu-item:hover {
-    background: $looks-tertiary;
+    background: $motion-primary;
     color: white;
 }
 
