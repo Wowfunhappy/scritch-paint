@@ -6,7 +6,7 @@ orbs:
 aliases:
   - &defaults
       docker:
-        - image: cimg/node:lts-browsers
+        - image: cimg/node:16.18.1-browsers
           auth:
             username: $DOCKERHUB_USERNAME
             password: $DOCKERHUB_PASSWORD
@@ -48,6 +48,7 @@ jobs:
       - *build
       - store_test_results:
           path: test/results
+      - run: npx --no -- semantic-release --dry-run
   build-test-deploy:
     <<: *defaults
     steps:
@@ -59,7 +60,7 @@ jobs:
       - store_test_results:
           path: test/results
       - *deploy-gh-pages
-      - run: npx semantic-release
+      - run: npx --no -- semantic-release
   push-translations:
     <<: *defaults
     steps:
@@ -76,6 +77,13 @@ workflows:
     jobs:
       - commitlint/lint:
           target-branch: develop
+          filters:
+            branches:
+                ignore:
+                  - master
+                  - develop
+                  - beta
+                  - /^hotfix\/.*/
   build-test-no-deploy:
     jobs:
       - build-test:
@@ -86,6 +94,7 @@ workflows:
                 ignore:
                   - master
                   - develop
+                  - beta
                   - /^hotfix\/.*/
                   - gh-pages
   build-test-deploy:
@@ -93,11 +102,13 @@ workflows:
       - build-test-deploy:
           context:
             - dockerhub-credentials
+            - scratch-npm-creds
           filters:
             branches:
                 only:
                   - master
                   - develop
+                  - beta
                   - /^hotfix\/.*/
   push-translations:
     triggers:
