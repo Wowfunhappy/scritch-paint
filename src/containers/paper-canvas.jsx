@@ -134,7 +134,7 @@ class PaperCanvas extends React.Component {
             return;
         }
 
-        if (format === 'jpg' || format === 'png') {
+        if (format === 'jpg' || format === 'png' || format === 'webp') {
             // import bitmap
             this.props.changeFormat(Formats.BITMAP_SKIP_CONVERT);
 
