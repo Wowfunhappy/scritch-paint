@@ -290,6 +290,21 @@ const FixedToolsComponent = props => {
                     </InputGroup>
                 </MediaQuery> : null
             }
+            
+            {/*Scritch: Remove Background*/}
+            {isVector(props.format) ?
+                null :
+                <InputGroup className={styles.modDashedBorder}>
+                    <LabeledIconButton
+                        disabled={false}
+                        hideLabel={hideLabel(props.intl.locale)}
+                        imgSrc={sendForwardIcon}
+                        title="Remove Background"
+                        onClick={props.onRemoveBackground}
+                    />
+                </InputGroup>
+            }
+            
         </div>
     );
 };
@@ -309,7 +324,10 @@ FixedToolsComponent.propTypes = {
     onUndo: PropTypes.func.isRequired,
     onUngroup: PropTypes.func.isRequired,
     onUpdateName: PropTypes.func.isRequired,
-    rtl: PropTypes.bool.isRequired
+    rtl: PropTypes.bool.isRequired,
+    
+    //scritch
+    onRemoveBackground: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({

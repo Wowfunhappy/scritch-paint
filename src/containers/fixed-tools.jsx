@@ -18,6 +18,8 @@ import {groupSelection, ungroupSelection} from '../helper/group';
 import Formats, {isBitmap} from '../lib/format';
 import bindAll from 'lodash.bindall';
 
+import removeImageBackground from '../helper/remove-background/remove-background.js';
+
 class FixedTools extends React.Component {
     constructor (props) {
         super(props);
@@ -28,7 +30,10 @@ class FixedTools extends React.Component {
             'handleSendToFront',
             'handleSetSelectedItems',
             'handleGroup',
-            'handleUngroup'
+            'handleUngroup',
+            
+            //scritch
+            'handleRemoveBackground'
         ]);
     }
     handleGroup () {
@@ -52,6 +57,11 @@ class FixedTools extends React.Component {
     handleSetSelectedItems () {
         this.props.setSelectedItems(this.props.format);
     }
+    //Scritch
+    handleRemoveBackground () {
+        removeImageBackground(this.props.onUpdateImage);
+        console.log("handleRemoveBackground todo");
+    }
     render () {
         return (
             <FixedToolsComponent
@@ -68,6 +78,9 @@ class FixedTools extends React.Component {
                 onUngroup={this.handleUngroup}
                 onUpdateImage={this.props.onUpdateImage}
                 onUpdateName={this.props.onUpdateName}
+                
+                //Scritch
+                onRemoveBackground={this.handleRemoveBackground}
             />
         );
     }
