@@ -23,6 +23,7 @@
     "url": "https://github.com/LLK/scratch-paint.git"
   },
   "dependencies": {
+    "@imgly/background-removal": "^1.4.1",
     "@scratch/paper": "0.11.20221201200345",
     "classnames": "2.2.5",
     "keymirror": "0.1.1",
@@ -49,6 +50,8 @@
     "@babel/cli": "^7.23.0",
     "@babel/core": "^7.23.2",
     "@babel/node": "^7.22.19",
+    "@babel/plugin-proposal-class-properties": "^7.18.6",
+    "@babel/plugin-proposal-optional-chaining": "^7.21.0",
     "@babel/preset-env": "^7.23.2",
     "@babel/preset-react": "^7.22.15",
     "@commitlint/cli": "17.0.3",
@@ -105,7 +108,8 @@
     "url-loader": "2.3.0",
     "webpack": "4.46.0",
     "webpack-cli": "3.3.12",
-    "webpack-dev-server": "3.11.2"
+    "webpack-dev-server": "3.11.2",
+    "webpack-node-externals": "^3.0.0"
   },
   "config": {
     "commitizen": {

@@ -17,13 +17,38 @@ const base = {
         rules: [{
             test: /\.jsx?$/,
             loader: 'babel-loader',
-            include: path.resolve(__dirname, 'src'),
+            include: [
+                path.resolve(__dirname, 'src'),
+            ],
             options: {
-                plugins: ['transform-object-rest-spread'],
+                plugins: ['transform-object-rest-spread', '@babel/plugin-proposal-optional-chaining'],
                 presets: [
                     ['@babel/preset-env', {
                         targets: ['last 3 versions', 'Safari >= 8', 'iOS >= 8']}],
                     '@babel/preset-react']
+            }
+        },
+        {
+            test: /\.mjs$/,
+            include: /node_modules\/@imgly\/background-removal/,
+            type: "javascript/auto",
+            use: {
+                loader: "babel-loader",
+                options: {
+                    plugins: ["@babel/plugin-proposal-class-properties"],
+                    presets: ['@babel/preset-env']
+                },
+            },
+        },
+        {
+            test: /\.js$/,
+            loader: 'babel-loader',
+            include: [
+                path.resolve(__dirname, 'node_modules/onnxruntime-web'),
+                path.resolve(__dirname, 'node_modules/onnxruntime-common'),
+            ],
+            options: {
+                plugins: ['@babel/plugin-proposal-optional-chaining', '@babel/plugin-transform-nullish-coalescing-operator', '@babel/plugin-transform-logical-assignment-operators']
             }
         },
         {
@@ -68,6 +93,15 @@ const base = {
                 include: /\.min\.js$/
             })
         ]
+    },
+    resolve: {
+        extensions: ['.js', '.jsx', '.json'],
+        alias: {
+            'onnxruntime-web': path.resolve(
+                __dirname,
+                './node_modules/onnxruntime-web/dist/ort.js'
+            ),
+        },
     },
     plugins: []
 };

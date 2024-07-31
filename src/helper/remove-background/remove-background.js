@@ -1,14 +1,26 @@
-import "regenerator-runtime/runtime";
-import './vendor/imgly-background-removal.js';
+import imglyRemoveBackground from "@imgly/background-removal"
 import { getRaster } from '../layer';
 
-const removeImageBackground = async function (onUpdateImage) {
+import * as ort from 'onnxruntime-web';
+import * as ortc from 'onnxruntime-common';
+
+const removeImageBackground = function (onUpdateImage) {
+	console.log(ort);
+	console.log(ortc);
+	
 	const inBlob = getRaster().source;
-	console.log(inBlob);
-	await window.imglyRemoveBackground(inBlob, {
-		publicPath: "https://staticimgly.com/@imgly/background-removal-data/@1.4.1/dist/",
+	
+	if (!ort.env) {
+		ort.env = ortc.env;
+	}
+	if (!ort.InferenceSession) {
+		ort.InferenceSession = ortc.InferenceSession;
+	}
+	
+	imglyRemoveBackground(inBlob, {
+		publicPath: "http://localhost/bg-removal-data/",
 		debug: true,
-		proxyToWorker: false,
+		proxyToWorker: true,
 		fetchArgs: {
 			mode: 'no-cors'
 		},
