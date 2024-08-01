@@ -17,11 +17,9 @@ const base = {
         rules: [{
             test: /\.jsx?$/,
             loader: 'babel-loader',
-            include: [
-                path.resolve(__dirname, 'src'),
-            ],
+            include: path.resolve(__dirname, 'src'),
             options: {
-                plugins: ['transform-object-rest-spread', '@babel/plugin-proposal-optional-chaining'],
+                plugins: ['transform-object-rest-spread'],
                 presets: [
                     ['@babel/preset-env', {
                         targets: ['last 3 versions', 'Safari >= 8', 'iOS >= 8']}],
@@ -39,17 +37,6 @@ const base = {
                     presets: ['@babel/preset-env']
                 },
             },
-        },
-        {
-            test: /\.js$/,
-            loader: 'babel-loader',
-            include: [
-                path.resolve(__dirname, 'node_modules/onnxruntime-web'),
-                path.resolve(__dirname, 'node_modules/onnxruntime-common'),
-            ],
-            options: {
-                plugins: ['@babel/plugin-proposal-optional-chaining', '@babel/plugin-transform-nullish-coalescing-operator', '@babel/plugin-transform-logical-assignment-operators']
-            }
         },
         {
             test: /\.css$/,
@@ -94,21 +81,15 @@ const base = {
             })
         ]
     },
-    resolve: {
-        extensions: ['.js', '.jsx', '.json'],
-        alias: {
-            'onnxruntime-web': path.resolve(
-                __dirname,
-                './node_modules/onnxruntime-web/dist/ort.js'
-            ),
-        },
-    },
     plugins: []
 };
 
 module.exports = [
     // For the playground
     defaultsDeep({}, base, {
+        externals: {
+            'onnxruntime-web': 'ort'
+        },
         devServer: {
             contentBase: path.resolve(__dirname, 'playground'),
             host: '0.0.0.0',
@@ -142,7 +123,8 @@ module.exports = [
             'react-responsive': 'react-responsive',
             'react-style-proptype': 'react-style-proptype',
             'react-tooltip': 'react-tooltip',
-            'redux': 'redux'
+            'redux': 'redux',
+            'onnxruntime-web': 'ort'
         },
         entry: {
             'scratch-paint': './src/index.js'
