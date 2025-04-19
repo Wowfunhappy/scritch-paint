@@ -11,6 +11,12 @@
     width: 8rem;
 }
 
+@media only screen and (max-width: 1035px) { /*Scritch*/
+    .costume-input {
+        width: 7rem;
+    }
+}
+
 [dir="ltr"] .mod-dashed-border {
     border-right: 1px dashed $ui-pane-border;
     padding-right: calc(2 * $grid-unit);

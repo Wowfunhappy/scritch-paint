@@ -92,7 +92,7 @@ const FixedToolsComponent = props => {
         <div className={styles.row}>
             {/* Name field */}
             <InputGroup>
-                <MediaQuery minWidth={layout.fullSizeEditorMinWidth}>
+                <MediaQuery minWidth={layout.fullSizePaint}>
                     <Label text={props.intl.formatMessage(messages.costume)}>
                         <BufferedInput
                             className={styles.costumeInput}
@@ -102,7 +102,7 @@ const FixedToolsComponent = props => {
                         />
                     </Label>
                 </MediaQuery>
-                <MediaQuery maxWidth={layout.fullSizeEditorMinWidth - 1}>
+                <MediaQuery maxWidth={layout.fullSizePaint - 1}>
                     <BufferedInput
                         className={styles.costumeInput}
                         type="text"

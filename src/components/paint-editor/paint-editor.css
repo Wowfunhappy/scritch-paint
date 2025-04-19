@@ -25,7 +25,7 @@
     flex-direction: row;
     height: 100%;
     padding-top: calc(5 * $grid-unit);
-    min-width: 524px;
+    /*min-width: 524px; Scritch: commented out because it'll overflow 1024px width*/
 }
 
 .row + .row {
