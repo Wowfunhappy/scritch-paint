@@ -9,6 +9,7 @@ import {getRaster} from '../helper/layer';
 import {getHitBounds} from '../helper/bitmap';
 import {getSelectedLeafItems} from '../helper/selection';
 import BackgroundRemover from '../helper/remove-background';
+import isRectangularBitmap from '../helper/is-rectangular-bitmap';
 import styles from '../components/paint-editor/paint-editor.css';
 import labeledIconStyles from '../components/labeled-icon-button/labeled-icon-button.css';
 import removeBackgroundIcon from '../components/paint-editor/icons/remove-background.svg';
@@ -70,7 +71,7 @@ class RemoveBackground extends React.Component {
         this.setState({busy: false, error: false});
     }
     handleRemove () {
-        if (this.state.busy || this.timer) return;
+        if (this.state.busy || this.timer || !this.props.bitmapRectangular) return;
         this.setState({busy: true, error: false});
         // Deactivating selection/text tools commits floating artwork before reading the bitmap.
         this.props.changeMode(Modes.BIT_BRUSH);
@@ -83,7 +84,7 @@ class RemoveBackground extends React.Component {
                 const raster = getRaster();
                 if (!raster.loaded || getSelectedLeafItems().length) throw new Error('Bitmap is not ready');
                 const bounds = getHitBounds(raster);
-                if (!bounds.width || !bounds.height) {
+                if (!bounds.width || !bounds.height || !isRectangularBitmap(raster.getImageData())) {
                     this.cancel();
                     return;
                 }
@@ -125,6 +126,7 @@ class RemoveBackground extends React.Component {
                             aria-label={label}
                             className={`${labeledIconStyles.modEditField} ${styles.backgroundRemovalButton}`}
                             data-busy={this.state.busy}
+                            disabled={!this.state.busy && !this.props.bitmapRectangular}
                             title={label}
                             type="button"
                             onClick={this.state.busy ? this.handleCancel : this.handleRemove}
@@ -173,6 +175,7 @@ class RemoveBackground extends React.Component {
 }
 
 RemoveBackground.propTypes = {
+    bitmapRectangular: PropTypes.bool,
     changeMode: PropTypes.func.isRequired,
     imageId: PropTypes.string,
     mode: PropTypes.string,
@@ -182,6 +185,7 @@ RemoveBackground.propTypes = {
 
 export {RemoveBackground};
 export default connect(state => ({
+    bitmapRectangular: state.scratchPaint.bitmapRectangular,
     mode: state.scratchPaint.mode,
     undo: state.scratchPaint.undo
 }), {changeMode})(RemoveBackground);

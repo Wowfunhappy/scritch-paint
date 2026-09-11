@@ -19,9 +19,11 @@ import textEditTargetReducer from './text-edit-target';
 import viewBoundsReducer from './view-bounds';
 import undoReducer from './undo';
 import zoomLevelsReducer from './zoom-levels';
+import bitmapShapeReducer from './bitmap-shape';
 
 export default combineReducers({
     mode: modeReducer,
+    bitmapRectangular: bitmapShapeReducer,
     bitBrushSize: bitBrushSizeReducer,
     bitEraserSize: bitEraserSizeReducer,
     brushMode: brushModeReducer,

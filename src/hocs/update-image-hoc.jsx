@@ -7,6 +7,8 @@ import omit from 'lodash.omit';
 import {connect} from 'react-redux';
 
 import {undoSnapshot} from '../reducers/undo';
+import {setBitmapRectangular} from '../reducers/bitmap-shape';
+import isRectangularBitmap from '../helper/is-rectangular-bitmap';
 import {setSelectedItems} from '../reducers/selected-items';
 import {updateViewBounds} from '../reducers/view-bounds';
 
@@ -104,6 +106,9 @@ const UpdateImageHOC = function (WrappedComponent) {
             }
 
             const imageData = plasteredRaster.getImageData(rect);
+            // Reuse the exported pixels, including floating selections, instead
+            // of scanning the canvas on every render or pointer movement.
+            this.props.setBitmapRectangular(isRectangularBitmap(imageData));
 
             this.props.onUpdateImage(
                 false /* isVector */,
@@ -170,6 +175,7 @@ const UpdateImageHOC = function (WrappedComponent) {
             const componentProps = omit(this.props, [
                 'format',
                 'onUpdateImage',
+                'setBitmapRectangular',
                 'undoSnapshot'
             ]);
             return (
@@ -185,6 +191,7 @@ const UpdateImageHOC = function (WrappedComponent) {
         format: PropTypes.oneOf(Object.keys(Formats)),
         mode: PropTypes.oneOf(Object.keys(Modes)).isRequired,
         onUpdateImage: PropTypes.func.isRequired,
+        setBitmapRectangular: PropTypes.func.isRequired,
         undoSnapshot: PropTypes.func.isRequired,
         updateViewBounds: PropTypes.func.isRequired
     };
@@ -195,6 +202,7 @@ const UpdateImageHOC = function (WrappedComponent) {
         undoState: state.scratchPaint.undo
     });
     const mapDispatchToProps = dispatch => ({
+        setBitmapRectangular: rectangular => dispatch(setBitmapRectangular(rectangular)),
         setSelectedItems: format => {
             dispatch(setSelectedItems(getSelectedLeafItems(), isBitmap(format)));
         },

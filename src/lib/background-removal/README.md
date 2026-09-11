@@ -28,3 +28,9 @@ is scaled to the original artwork and multiplied with its existing alpha.
 The bitmap's position and resolution stay intact. Successful removal uses the
 normal image update/undo path. Edits, costume switches and cancellation discard
 pending results; no speed guarantee has been established on slower hardware.
+
+The button is enabled only when nontransparent pixels fill an axis-aligned
+rectangle. Outer transparent margins are ignored; holes, erased gaps and rounded
+corners disable it. Partially transparent pixels still count as visible. The
+check runs on import and exported bitmap updates (including Undo/Redo and
+floating selections), and is repeated on the committed bitmap before inference.

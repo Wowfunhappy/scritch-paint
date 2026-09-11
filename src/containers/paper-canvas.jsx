@@ -8,6 +8,8 @@ import log from '../log/log';
 
 import {performSnapshot} from '../helper/undo';
 import {undoSnapshot, clearUndoState} from '../reducers/undo';
+import {setBitmapRectangular} from '../reducers/bitmap-shape';
+import isRectangularBitmap from '../helper/is-rectangular-bitmap';
 import {isGroup, ungroupItems} from '../helper/group';
 import {clearRaster, convertBackgroundGuideLayer, getRaster, setupLayers} from '../helper/layer';
 import {clearSelectedItems} from '../reducers/selected-items';
@@ -124,6 +126,7 @@ class PaperCanvas extends React.Component {
         this.importImage(format, image, rotationCenterX, rotationCenterY);
     }
     importImage (format, image, rotationCenterX, rotationCenterY) {
+        this.props.setBitmapRectangular(false);
         // Stop any in-progress imports
         this.clearQueuedImport();
 
@@ -167,6 +170,7 @@ class PaperCanvas extends React.Component {
                     (ART_BOARD_HEIGHT / 2) - rotationCenterY);
 
                 this.maybeZoomToFit(true /* isBitmap */);
+                this.props.setBitmapRectangular(isRectangularBitmap(getRaster().getImageData()));
                 performSnapshot(this.props.undoSnapshot, Formats.BITMAP_SKIP_CONVERT);
                 this.recalibrateSize();
             };
@@ -364,6 +368,7 @@ PaperCanvas.propTypes = {
     rotationCenterX: PropTypes.number,
     rotationCenterY: PropTypes.number,
     saveZoomLevel: PropTypes.func.isRequired,
+    setBitmapRectangular: PropTypes.func.isRequired,
     setZoomLevelId: PropTypes.func.isRequired,
     undoSnapshot: PropTypes.func.isRequired,
     updateViewBounds: PropTypes.func.isRequired,
@@ -379,6 +384,7 @@ const mapStateToProps = state => ({
     zoomLevels: state.scratchPaint.zoomLevels
 });
 const mapDispatchToProps = dispatch => ({
+    setBitmapRectangular: rectangular => dispatch(setBitmapRectangular(rectangular)),
     undoSnapshot: snapshot => {
         dispatch(undoSnapshot(snapshot));
     },

@@ -1,6 +1,7 @@
 /* eslint-env jest, browser */
 import React from 'react'; // eslint-disable-line no-unused-vars
 import {shallow} from 'enzyme';
+import {FormattedMessage} from 'react-intl';
 import {RemoveBackground} from '../../src/containers/remove-background.jsx'; // eslint-disable-line no-unused-vars
 import BackgroundRemover from '../../src/helper/remove-background';
 import {getRaster} from '../../src/helper/layer';
@@ -34,6 +35,7 @@ beforeEach(() => {
     raster = {
         loaded: true,
         canvas,
+        getImageData: jest.fn(() => ({width: 2, height: 2, data: new Uint8ClampedArray(16).fill(255)})),
         bounds: {topLeft: {}},
         getSubRaster: () => ({canvas, remove: jest.fn()}),
         setImageData: jest.fn()
@@ -49,6 +51,7 @@ beforeEach(() => {
     }));
     onUpdateImage = jest.fn();
     wrapper = shallow(<RemoveBackground
+        bitmapRectangular
         changeMode={jest.fn()}
         imageId="costume-a"
         mode="BIT_BRUSH"
@@ -124,6 +127,38 @@ test('discards a result if an unfinished brush stroke changed the pixels', async
 
 test('does not run inference or add an undo entry for an empty bitmap', () => {
     getHitBounds.mockReturnValue({width: 0, height: 0});
+    wrapper.instance().handleRemove();
+    jest.runOnlyPendingTimers();
+    expect(wrapper.state('busy')).toBe(false);
+    expect(onUpdateImage).not.toHaveBeenCalled();
+});
+
+const getButton = () => wrapper.find(FormattedMessage).first()
+    .prop('children')('Remove Background');
+
+test('disables removal for a nonrectangular costume and re-enables it when restored', () => {
+    wrapper.setProps({bitmapRectangular: false});
+    expect(getButton().props.disabled).toBe(true);
+    wrapper.instance().handleRemove();
+    expect(wrapper.state('busy')).toBe(false);
+    wrapper.setProps({bitmapRectangular: true});
+    expect(getButton().props.disabled).toBe(false);
+});
+
+test('still allows clicking to cancel while busy, even if eligibility changes', async () => {
+    wrapper.instance().handleRemove();
+    jest.runOnlyPendingTimers();
+    wrapper.setProps({bitmapRectangular: false});
+    expect(getButton().props.disabled).toBe(false);
+    getButton().props.onClick();
+    await finishRemoval();
+    expect(dispose).toHaveBeenCalled();
+    expect(onUpdateImage).not.toHaveBeenCalled();
+    expect(getButton().props.disabled).toBe(true);
+});
+
+test('checks current pixels again before inference after committing the selection', () => {
+    raster.getImageData.mockReturnValue({width: 2, height: 2, data: new Uint8ClampedArray(16)});
     wrapper.instance().handleRemove();
     jest.runOnlyPendingTimers();
     expect(wrapper.state('busy')).toBe(false);
