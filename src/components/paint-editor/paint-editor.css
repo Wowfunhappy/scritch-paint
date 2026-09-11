@@ -181,6 +181,114 @@ $border-radius: 0.25rem;
     justify-content: center;
 }
 
+.background-removal {
+    display: flex;
+    align-items: center;
+    gap: $grid-unit;
+    margin-inline-start: calc(2 * $grid-unit);
+}
+
+.background-removal button {
+    cursor: pointer;
+    border: 0;
+}
+
+.background-removal .background-removal-button {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-family: inherit;
+    color: inherit;
+}
+
+.background-removal-button:focus-visible {
+    outline: 2px solid $motion-primary;
+    outline-offset: 2px;
+}
+
+.background-removal-icon {
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+.background-removal-working {
+    position: relative;
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+.background-removal-spinner {
+    position: absolute;
+    inset: 0;
+    box-sizing: border-box;
+    border: 2px solid $motion-transparent;
+    border-top-color: $motion-primary;
+    border-radius: 50%;
+    animation: background-removal-spin 1s linear infinite;
+}
+
+.background-removal-cancel {
+    display: none;
+    position: absolute;
+    width: .75rem;
+    height: .75rem;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.background-removal-button:hover .background-removal-spinner,
+.background-removal-button:focus-visible .background-removal-spinner {
+    display: none;
+}
+
+.background-removal-button:hover .background-removal-cancel,
+.background-removal-button:focus-visible .background-removal-cancel {
+    display: block;
+}
+
+.background-removal-button .background-removal-label {
+    display: grid;
+}
+
+/* Keep the label width stable when hovering to cancel. */
+.background-removal-label > span {
+    grid-area: 1 / 1;
+}
+
+.background-removal-progress-label,
+.background-removal-cancel-label,
+.background-removal-button[data-busy="true"] .background-removal-idle-label {
+    visibility: hidden;
+}
+
+.background-removal-button[data-busy="true"] .background-removal-progress-label {
+    visibility: visible;
+}
+
+.background-removal-button[data-busy="true"]:hover .background-removal-progress-label,
+.background-removal-button[data-busy="true"]:focus-visible .background-removal-progress-label {
+    visibility: hidden;
+}
+
+.background-removal-button[data-busy="true"]:hover .background-removal-cancel-label,
+.background-removal-button[data-busy="true"]:focus-visible .background-removal-cancel-label {
+    visibility: visible;
+}
+
+@keyframes background-removal-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.background-removal [role="alert"] {
+    max-width: 12rem;
+    font-size: 0.75rem;
+}
+
 [dir="ltr"] .bitmap-button-icon {
     margin-right: calc(2 * $grid-unit);
 }

@@ -33,6 +33,7 @@ import SelectMode from '../../containers/select-mode.jsx';
 import StrokeColorIndicatorComponent from '../../containers/stroke-color-indicator.jsx';
 import StrokeWidthIndicatorComponent from '../../containers/stroke-width-indicator.jsx';
 import TextMode from '../../containers/text-mode.jsx';
+import RemoveBackground from '../../containers/remove-background.jsx';
 
 import Formats, {isBitmap, isVector} from '../../lib/format';
 import styles from './paint-editor.css';
@@ -73,6 +74,10 @@ const PaintEditorComponent = props => (
                         onUpdateImage={props.onUpdateImage}
                         onUpdateName={props.onUpdateName}
                     />
+                    {isBitmap(props.format) ? <RemoveBackground
+                        imageId={props.imageId}
+                        onUpdateImage={props.onUpdateImage}
+                    /> : null}
                 </div>
                 {/* Second Row */}
                 {isVector(props.format) ?
